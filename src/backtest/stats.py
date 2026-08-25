@@ -30,3 +30,17 @@ def annualised_return(returns: pd.Series, periods_per_year: int = PERIODS_PER_YE
 
 def annualised_vol(returns: pd.Series, periods_per_year: int = PERIODS_PER_YEAR) -> float:
     return returns.std() * np.sqrt(periods_per_year)
+
+def sharpe(returns: pd.Series, risk_free_rate: float = 0.0, periods_per_year: int = PERIODS_PER_YEAR) -> float:
+    vol = annualised_vol(returns, periods_per_year)
+    if (vol < 1e-12):
+        return np.nan
+    excess = (annualised_return(returns, periods_per_year) - risk_free_rate)
+    return excess / vol
+
+def max_drawdown(returns: pd.Series) -> float:
+    equity = np.exp(returns.cumsum())
+    running_max = equity.cummax()
+    drawdown = equity / running_max - 1
+    return drawdown.min()
+
