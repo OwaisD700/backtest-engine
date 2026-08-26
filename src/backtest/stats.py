@@ -44,3 +44,20 @@ def max_drawdown(returns: pd.Series) -> float:
     drawdown = equity / running_max - 1
     return drawdown.min()
 
+def bootstrap_sharpe_ci(
+    returns: pd.Series,
+    n_boot: int = 10_000,
+    ci: float = 0.90,
+    risk_free_rate: float = 0.0,
+    periods_per_year: int = PERIODS_PER_YEAR,
+) -> tuple[float, float]:
+    boot_sharpes = []
+    for _ in range(n_boot):
+        sample = returns.sample(n=len(returns), replace=True)
+        boot_sharpes.append(sharpe(sample, risk_free_rate, periods_per_year))
+
+    # TODO: Sort array in ascending order    
+
+    lower = np.percentile(boot_sharpes, (1 - ci) / 2 * 100)
+    upper = np.percentile(boot_sharpes, (1 + ci) / 2 * 100)
+    return lower, upper
