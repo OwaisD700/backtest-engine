@@ -55,8 +55,7 @@ def bootstrap_sharpe_ci(
     for _ in range(n_boot):
         sample = returns.sample(n=len(returns), replace=True)
         boot_sharpes.append(sharpe(sample, risk_free_rate, periods_per_year))
-
-    # TODO: Sort array in ascending order    
+   
 
     lower = np.percentile(boot_sharpes, (1 - ci) / 2 * 100)
     upper = np.percentile(boot_sharpes, (1 + ci) / 2 * 100)
