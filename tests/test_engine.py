@@ -54,3 +54,24 @@ def test_alignment_on_hand_computed_series():
     mask = result.gross_returns.index != "2020-01-04"
     assert (result.gross_returns[mask] == 0.0).all()
 
+
+
+def test_cost_accounting_in_isolation():
+    dates = pd.date_range("2020-01-01", periods=6, freq="D")
+    prices = [100, 100, 100, 100, 100, 100]
+    bars = pd.DataFrame({"Close": prices}, index=dates)
+
+    flips = [1.0, -1.0, 1.0, -1.0, 1.0, -1.0]
+    i = {"n": 0}
+    def flipper(history: pd.DataFrame) -> float:
+        val = flips[i["n"]]
+        i["n"] += 1
+        return val
+
+    cost_bps = 10.0
+    result = run_backtest(bars, flipper, cost_bps=cost_bps)
+
+    # TODO 1: total turnover — every flip is a change of 2.0 (e.g. +1 to -1), work out by hand
+    # TODO 2: expected total cost = total_turnover * cost_bps / 10_000
+    # TODO 3: assert result.costs.sum() == pytest.approx(expected_total_cost)
+    # TODO 4: assert result.net_returns.sum() == pytest.approx(-expected_total_cost)

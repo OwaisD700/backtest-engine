@@ -48,7 +48,9 @@ def run_backtest(
 
     # commit 1: costs off
     turnover = pd.Series(0.0, index=bars.index)
+    turnover = positions.diff().abs().fillna(0.0)
     costs = pd.Series(0.0, index=bars.index)
+    costs = turnover * (cost_bps / 10_000)
     net_returns = gross_returns - costs
     # step 7: equity curve
     equity = (1 + net_returns).cumprod()
