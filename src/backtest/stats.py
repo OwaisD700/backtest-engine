@@ -4,7 +4,7 @@ stats.py — performance statistics for the backtest engine.
 SCOPE (Gate 3 of the prep plan):
     Functions that turn a series of returns into performance metrics:
     annualised_return, annualised_vol, sharpe, max_drawdown, hit_rate,
-    turnover, bootstrap_sharpe_ci.
+    bootstrap_sharpe_ci.
 
     These functions consume LOG returns (see log_returns() below), not
     simple returns, because log returns sum across time — that's what
@@ -43,6 +43,13 @@ def max_drawdown(returns: pd.Series) -> float:
     running_max = equity.cummax()
     drawdown = equity / running_max - 1
     return drawdown.min()
+
+def hit_rate(returns: pd.Series) -> float:
+    """Fraction of active days (non-zero return) that were positive."""
+    active = returns[returns != 0]
+    if len(active) == 0:
+        return np.nan
+    return (active > 0).mean()
 
 def bootstrap_sharpe_ci(
     returns: pd.Series,
