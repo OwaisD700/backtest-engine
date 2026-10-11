@@ -21,7 +21,7 @@ from src.backtest.stats import (
 )
 
 # Fixed settings. Every number in the README depends on these.
-DATA_PATH = "data/SPY.csv"            # check: must match your filename in data/
+DATA_PATH = "data/spy.csv"            # check: must match your filename in data/
 COST_BPS = 5.0                        # headline cost assumption
 COST_SWEEP = [0.0, 1.0, 2.0, 5.0, 10.0, 20.0]
 N_RESAMPLES = 10_000
