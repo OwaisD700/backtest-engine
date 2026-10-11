@@ -72,6 +72,8 @@ def test_cost_accounting_in_isolation():
     result = run_backtest(bars, flipper, cost_bps=cost_bps)
 
     # TODO 1: total turnover — every flip is a change of 2.0 (e.g. +1 to -1), work out by hand
-    # TODO 2: expected total cost = total_turnover * cost_bps / 10_000
-    # TODO 3: assert result.costs.sum() == pytest.approx(expected_total_cost)
-    # TODO 4: assert result.net_returns.sum() == pytest.approx(-expected_total_cost)
+    positions = [0, 1, -1, 1, -1, 1]
+    total_turnover = 9;
+    expected_total_cost = total_turnover * cost_bps / 10_000
+    assert result.costs.sum() == pytest.approx(expected_total_cost)
+    assert result.net_returns.sum() == pytest.approx(-expected_total_cost)
